@@ -1,0 +1,2 @@
+# super-checkers
+Шашки
