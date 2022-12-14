@@ -21,3 +21,12 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/.idea/$PROJECT_FILE$
+/.idea/.gitignore
+/.idea/sonarlint/issuestore/index.pb
+/.idea/jpa-buddy.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/qaplug_profiles.xml
+/super-checkers.iml
+/.idea/vcs.xml
