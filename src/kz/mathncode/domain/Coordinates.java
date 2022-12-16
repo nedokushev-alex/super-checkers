@@ -1,5 +1,7 @@
 package kz.mathncode.domain;
 
+import java.util.Objects;
+
 import kz.mathncode.domain.enums.DigitalCoordinate;
 import kz.mathncode.domain.enums.LetterCoordinate;
 
@@ -17,5 +19,23 @@ public class Coordinates {
 
         this.letter = letter;
         this.digital = digital;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Coordinates that = (Coordinates) o;
+        return letter == that.letter && digital == that.digital;
+    }
+
+    @Override
+    public int hashCode() {
+
+        // todo объяснить
+        return Objects.hash(letter, digital);
     }
 }

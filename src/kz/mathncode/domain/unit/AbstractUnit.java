@@ -19,4 +19,16 @@ public abstract class AbstractUnit implements Unit {
         this.color = color;
         this.coordinates = coordinates;
     }
+
+    @Override
+    public Coordinates getCoordinates() {
+
+        return coordinates;
+    }
+
+    @Override
+    public Color getColor() {
+
+        return color;
+    }
 }

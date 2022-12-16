@@ -1,6 +1,9 @@
 package kz.mathncode.domain;
 
+import java.util.List;
+
 import kz.mathncode.domain.enums.Color;
+import kz.mathncode.domain.unit.Unit;
 
 /**
  * @author Aleksandr Nedokushev
@@ -13,8 +16,18 @@ public class Game {
     public Game() {
 
         Player whitePlayer = new Player(Color.WHITE);
+        List<Unit> whiteUnits = whitePlayer.initUnits();
+
         Player blackPlayer = new Player(Color.BLACK);
+        List<Unit> blackUnits = blackPlayer.initUnits();
 
         this.board = new Board();
+        board.getUnits().addAll(whiteUnits);
+        board.getUnits().addAll(blackUnits);
+    }
+
+    public Board getBoard() {
+
+        return board;
     }
 }

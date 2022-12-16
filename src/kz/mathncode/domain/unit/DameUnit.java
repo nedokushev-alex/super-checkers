@@ -9,4 +9,8 @@ import kz.mathncode.domain.enums.Color;
  */
 public class DameUnit extends AbstractUnit {
 
+    public DameUnit(Color color, Coordinates coordinates) {
+
+        super(color, coordinates);
+    }
 }

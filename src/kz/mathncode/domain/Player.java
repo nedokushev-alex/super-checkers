@@ -1,5 +1,6 @@
 package kz.mathncode.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kz.mathncode.domain.enums.Color;
@@ -24,21 +25,29 @@ public class Player {
     public List<Unit> initUnits() {
 
         if (color == Color.WHITE) {
-            // todo расставить белые пешки с 1 по 3 линии
-            for (int line = 1; line <= 3; line++) {
-                for (int column = 1; column <= 8; column++) {
-                    if (line % 2 == column % 2) {
-                        // line = 1, column = 1
-                        // column -> LetterCoordinate
-                        // line -> DigitalCoordinate
-                        new SimpleUnit(color, new Coordinates());
-                    }
+            return initUnits(1,3);
+        } else {
+            return initUnits(6,8);
+        }
+    }
+
+    private List<Unit> initUnits(int startLine, int finishLine) {
+
+        List<Unit> units = new ArrayList<>();
+
+        for (int line = startLine; line <= finishLine; line++) {
+            for (int column = 1; column <= 8; column++) {
+                if (line % 2 == column % 2) {
+                    LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column);
+                    DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line);
+                    Coordinates coordinates = new Coordinates(letter, digital);
+
+                    SimpleUnit simpleUnit = new SimpleUnit(color, coordinates);
+                    units.add(simpleUnit);
                 }
             }
-        } else {
-            // todo расставить черные пешки с 6 по 8 линии
         }
 
-        new SimpleUnit(color, new Coordinates(LetterCoordinate.A, DigitalCoordinate.ONE));
+        return units;
     }
 }
