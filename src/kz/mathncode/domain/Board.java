@@ -26,25 +26,32 @@ public class Board {
         StringBuilder builder = new StringBuilder();
         for (int line = 8; line >= 1; line--) {
             builder.append(line).append("|");
+
             for (int column = 1; column <= 8; column++) {
-                // line = 8, column = 1
-                // line, column -> Coordinates
-                LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column); // A
-                DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line); // EIGHT
-                Coordinates fieldCoordinates = new Coordinates(letter, digital); // (A, EIGHT)
+                if (column % 2 == line % 2) {
+                    LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column); // A
+                    DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line); // EIGHT
+                    Coordinates fieldCoordinates = new Coordinates(letter, digital); // (A, EIGHT)
 
-                Unit unit = getUnitByCoordinates(fieldCoordinates); // есть ли юнит с координатой (A, EIGHT)
+                    Unit unit = getUnitByCoordinates(fieldCoordinates); // есть ли юнит с координатой (A, EIGHT)
 
-                if (unit == null) {
-                    builder.append("_");
+                    if (unit == null) {
+                        builder.append("_");
+                    } else {
+                        String unitView = unit.getColor() == Color.WHITE ? "w" : "b";
+                        builder.append(unitView);
+                    }
                 } else {
-                    String unitView = unit.getColor() == Color.WHITE ? "w" : "b";
-                    builder.append(unitView);
+                    builder.append("_");
                 }
 
                 builder.append("|");
             }
+            builder.append("\n");
         }
+
+        builder.append("  A B C D E F G H");
+
         return builder.toString();
     }
 

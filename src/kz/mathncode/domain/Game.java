@@ -30,4 +30,9 @@ public class Game {
 
         return board;
     }
+
+    public void move(Coordinates startCoordinate, Coordinates finishCoordinate) {
+
+        // todo получить юнита, который находится на startCoordinate
+    }
 }

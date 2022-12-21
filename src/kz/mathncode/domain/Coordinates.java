@@ -21,8 +21,27 @@ public class Coordinates {
         this.digital = digital;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public static Coordinates convertFromHumanInput(String humanInput) { // A3
+
+        // char -> String -> LetterCoordinate(по названию)
+        char letterChar = humanInput.charAt(0); //A как char
+        String letterString = String.valueOf(letterChar); //A как String
+        LetterCoordinate letter = LetterCoordinate.valueOf(letterString); //A как элемент перечисления LetterCoordinate.A
+
+        char digitalChar = humanInput.charAt(1);
+        // Первый вариант: char -> ascii-код -> -48
+        DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalChar - 48);
+
+        // Второй вариант: char -> String -> int -> DigitalCoordinate(по номеру линии)
+        //         String digitalString = String.valueOf(digitalChar);
+        //         int digitalInt = Integer.parseInt(digitalString);
+        //         DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalInt);
+
+        Coordinates coordinates = new Coordinates(letter, digital);
+        return coordinates;
+    }
+
+    @Override public boolean equals(Object o) {
 
         if (this == o)
             return true;
@@ -32,8 +51,7 @@ public class Coordinates {
         return letter == that.letter && digital == that.digital;
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
 
         // todo объяснить
         return Objects.hash(letter, digital);

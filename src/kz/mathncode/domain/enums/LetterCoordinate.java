@@ -22,6 +22,11 @@ public enum LetterCoordinate {
         this.columnNumber = number;
     }
 
+    public int getColumnNumber() {
+
+        return columnNumber;
+    }
+
     public static LetterCoordinate getByColumnNumber(int column) {
 
         for (LetterCoordinate value : values()) {
