@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import kz.mathncode.domain.enums.DigitalCoordinate;
 import kz.mathncode.domain.enums.LetterCoordinate;
+import kz.mathncode.exceptions.GameException;
 
 /**
  * @author Aleksandr Nedokushev
@@ -21,24 +22,38 @@ public class Coordinates {
         this.digital = digital;
     }
 
-    public static Coordinates convertFromHumanInput(String humanInput) { // A3
+    public LetterCoordinate getLetter() {
 
-        // char -> String -> LetterCoordinate(по названию)
-        char letterChar = humanInput.charAt(0); //A как char
-        String letterString = String.valueOf(letterChar); //A как String
-        LetterCoordinate letter = LetterCoordinate.valueOf(letterString); //A как элемент перечисления LetterCoordinate.A
+        return letter;
+    }
 
-        char digitalChar = humanInput.charAt(1);
-        // Первый вариант: char -> ascii-код -> -48
-        DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalChar - 48);
+    public DigitalCoordinate getDigital() {
 
-        // Второй вариант: char -> String -> int -> DigitalCoordinate(по номеру линии)
-        //         String digitalString = String.valueOf(digitalChar);
-        //         int digitalInt = Integer.parseInt(digitalString);
-        //         DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalInt);
+        return digital;
+    }
 
-        Coordinates coordinates = new Coordinates(letter, digital);
-        return coordinates;
+    public static Coordinates convertFromHumanInput(String humanInput) throws GameException { // A3
+
+        try {
+            // char -> String -> LetterCoordinate(по названию)
+            char letterChar = humanInput.charAt(0); //A как char
+            String letterString = String.valueOf(letterChar); //A как String
+            LetterCoordinate letter = LetterCoordinate.valueOf(letterString); //A как элемент перечисления LetterCoordinate.A
+
+            char digitalChar = humanInput.charAt(1);
+            // Первый вариант: char -> ascii-код -> -48
+            DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalChar - 48);
+
+            // Второй вариант: char -> String -> int -> DigitalCoordinate(по номеру линии)
+            //         String digitalString = String.valueOf(digitalChar);
+            //         int digitalInt = Integer.parseInt(digitalString);
+            //         DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(digitalInt);
+
+            Coordinates coordinates = new Coordinates(letter, digital);
+            return coordinates;
+        } catch (Exception ex) {
+            throw new GameException("Некорректные данные координат");
+        }
     }
 
     @Override public boolean equals(Object o) {

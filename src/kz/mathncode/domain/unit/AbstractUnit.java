@@ -27,6 +27,12 @@ public abstract class AbstractUnit implements Unit {
     }
 
     @Override
+    public void setCoordinate(Coordinates coordinates) {
+
+        this.coordinates = coordinates;
+    }
+
+    @Override
     public Color getColor() {
 
         return color;

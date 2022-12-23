@@ -11,5 +11,9 @@ public interface Unit {
 
     Coordinates getCoordinates();
 
+    void setCoordinate(Coordinates coordinates);
+
     Color getColor();
+
+    boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates);
 }

@@ -1,5 +1,7 @@
 package kz.mathncode.domain.enums;
 
+import kz.mathncode.exceptions.GameException;
+
 /**
  * @author Aleksandr Nedokushev
  * @created 14.12.2022
@@ -16,14 +18,18 @@ public enum DigitalCoordinate {
         this.lineNumber = number;
     }
 
-    public static DigitalCoordinate getByLineNumber(int line) {
+    public int getLineNumber() {
+
+        return lineNumber;
+    }
+
+    public static DigitalCoordinate getByLineNumber(int line) throws GameException {
 
         for (DigitalCoordinate value : values()) {
             if (value.lineNumber == line) {
                 return value;
             }
         }
-        // todo доделать нормально!
-        return null;
+        throw new GameException("Для данного номера линии нет соответствующего значения");
     }
 }

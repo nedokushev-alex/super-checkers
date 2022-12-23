@@ -13,4 +13,11 @@ public class DameUnit extends AbstractUnit {
 
         super(color, coordinates);
     }
+
+    @Override
+    public boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates) {
+
+        // todo потом
+        return false;
+    }
 }

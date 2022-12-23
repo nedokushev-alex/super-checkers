@@ -8,6 +8,7 @@ import kz.mathncode.domain.enums.DigitalCoordinate;
 import kz.mathncode.domain.enums.LetterCoordinate;
 import kz.mathncode.domain.unit.SimpleUnit;
 import kz.mathncode.domain.unit.Unit;
+import kz.mathncode.exceptions.GameException;
 
 /**
  * @author Aleksandr Nedokushev
@@ -22,7 +23,12 @@ public class Player {
         this.color = color;
     }
 
-    public List<Unit> initUnits() {
+    public Color getColor() {
+
+        return color;
+    }
+
+    public List<Unit> initUnits() throws GameException {
 
         if (color == Color.WHITE) {
             return initUnits(1,3);
@@ -31,7 +37,7 @@ public class Player {
         }
     }
 
-    private List<Unit> initUnits(int startLine, int finishLine) {
+    private List<Unit> initUnits(int startLine, int finishLine) throws GameException {
 
         List<Unit> units = new ArrayList<>();
 

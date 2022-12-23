@@ -7,6 +7,7 @@ import kz.mathncode.domain.enums.Color;
 import kz.mathncode.domain.enums.DigitalCoordinate;
 import kz.mathncode.domain.enums.LetterCoordinate;
 import kz.mathncode.domain.unit.Unit;
+import kz.mathncode.exceptions.GameException;
 
 /**
  * @author Aleksandr Nedokushev
@@ -21,7 +22,7 @@ public class Board {
         return units;
     }
 
-    public String show() {
+    public String show() throws GameException {
 
         StringBuilder builder = new StringBuilder();
         for (int line = 8; line >= 1; line--) {
@@ -55,7 +56,7 @@ public class Board {
         return builder.toString();
     }
 
-    private Unit getUnitByCoordinates(Coordinates fieldCoordinates) { // (A, EIGHT)
+    public Unit getUnitByCoordinates(Coordinates fieldCoordinates) { // (A, EIGHT)
 
         for (Unit unit : units) {
             Coordinates unitCoordinates = unit.getCoordinates(); // (A, ONE) , (C, ONE)
