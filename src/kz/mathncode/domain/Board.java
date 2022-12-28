@@ -30,9 +30,9 @@ public class Board {
 
             for (int column = 1; column <= 8; column++) {
                 if (column % 2 == line % 2) {
-                    LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column); // A
-                    DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line); // EIGHT
-                    Coordinates fieldCoordinates = new Coordinates(letter, digital); // (A, EIGHT)
+                    LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column);
+                    DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line);
+                    Coordinates fieldCoordinates = new Coordinates(letter, digital);
 
                     Unit unit = getUnitByCoordinates(fieldCoordinates); // есть ли юнит с координатой (A, EIGHT)
 

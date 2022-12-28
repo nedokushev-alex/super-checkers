@@ -1,7 +1,9 @@
 package kz.mathncode.domain.unit;
 
+import kz.mathncode.domain.Board;
 import kz.mathncode.domain.Coordinates;
 import kz.mathncode.domain.enums.Color;
+import kz.mathncode.exceptions.GameException;
 
 /**
  * @author Aleksandr Nedokushev
@@ -17,31 +19,58 @@ public class SimpleUnit extends AbstractUnit {
     @Override
     public boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates) {
 
-        // БЕЛЫЕ : digital +1 , letter +/-1
-        // ЧЕРНЫЕ : digital -1 , letter +/-1
-        // return true
-        // иначе
-
-        // B6 -> A5
-        // B6 -> C5
-
-        int startLine = startCoordinates.getDigital().getLineNumber(); //6
-        int finishLine = finishCoordinates.getDigital().getLineNumber(); //5
-        int diffLine = finishLine - startLine; // 5-6 = -1
-
-        int startColumn = startCoordinates.getLetter().getColumnNumber(); // 2 //2
-        int finishColumn = finishCoordinates.getLetter().getColumnNumber(); // 1 //3
-        int diffColumn = finishColumn - startColumn; // 1-2 = -1 // 3-2 = 1
+        int diffLine = getDiffLine(startCoordinates, finishCoordinates);
+        int diffColumn = getDiffColumn(startCoordinates, finishCoordinates);
 
         if (color == Color.WHITE) {
             if (diffLine == 1 && Math.abs(diffColumn) == 1) {
                 return true;
             }
         } else {
-            // todo логика для ЧЕРНЫХ
+            if (diffLine == -1 && Math.abs(diffColumn) == 1) {
+                return true;
+            }
         }
 
         return false;
     }
 
+    @Override
+    public boolean isCorrectChop(Coordinates startCoordinates, Coordinates finishCoordinates,
+            Board board) throws GameException {
+
+        int diffLine = getDiffLine(startCoordinates, finishCoordinates);
+        int diffColumn = getDiffColumn(startCoordinates, finishCoordinates);
+
+        if (Math.abs(diffLine) == 2 && Math.abs(diffColumn) == 2) {
+
+            int victimLine = (startCoordinates.getDigital().getLineNumber() +
+                    finishCoordinates.getDigital().getLineNumber()) / 2;
+            int victimColumn = (startCoordinates.getLetter().getColumnNumber() +
+                    finishCoordinates.getLetter().getColumnNumber()) / 2;
+
+            Coordinates victimCoord = new Coordinates(victimColumn, victimLine);
+
+            Unit victim = board.getUnitByCoordinates(victimCoord);
+            if (victim != null && victim.getColor() != color) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static int getDiffLine(Coordinates startCoordinates, Coordinates finishCoordinates) {
+
+        int startLine = startCoordinates.getDigital().getLineNumber();
+        int finishLine = finishCoordinates.getDigital().getLineNumber();
+        return finishLine - startLine;
+    }
+
+    private static int getDiffColumn(Coordinates startCoordinates, Coordinates finishCoordinates) {
+
+        int startColumn = startCoordinates.getLetter().getColumnNumber();
+        int finishColumn = finishCoordinates.getLetter().getColumnNumber();
+        return finishColumn - startColumn;
+    }
 }

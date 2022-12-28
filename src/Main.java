@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 import kz.mathncode.domain.Coordinates;
 import kz.mathncode.domain.Game;
+import kz.mathncode.domain.enums.Color;
 import kz.mathncode.exceptions.GameException;
 
 /**
@@ -13,23 +14,24 @@ public class Main {
     public static void main(String[] args) throws GameException {
 
         Game game = new Game();
-        String boardView = game.getBoard().show();
-        System.out.println(boardView);
-
         Scanner in = new Scanner(System.in);
 
-        try {
-            String[] humanCoordinates = receiveHumanCoordinates(in); // { A3, B4 }
+        do {
+            System.out.println(game.getBoard().show());
+            System.out.println("Ходят " + game.getActivePlayer().getName());
 
-            Coordinates startCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[0]);
-            Coordinates finishCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[1]);
+            try {
+                String[] humanCoordinates = receiveHumanCoordinates(in); // { A3, B4 }
 
-            game.move(startCoordinates, finishCoordinates);
+                Coordinates startCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[0]);
+                Coordinates finishCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[1]);
 
-        } catch (GameException ex) {
-            System.out.println("ОШИБКА: " + ex.getMessage());
-        }
+                game.move(startCoordinates, finishCoordinates);
 
+            } catch (GameException ex) {
+                System.out.println("ОШИБКА: " + ex.getMessage());
+            }
+        } while (true);
     }
 
     private static String[] receiveHumanCoordinates(Scanner in) throws GameException {

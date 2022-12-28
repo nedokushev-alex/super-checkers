@@ -22,6 +22,15 @@ public class Coordinates {
         this.digital = digital;
     }
 
+    public Coordinates(int column, int line) throws GameException {
+
+        LetterCoordinate letter = LetterCoordinate.getByColumnNumber(column);
+        DigitalCoordinate digital = DigitalCoordinate.getByLineNumber(line);
+
+        this.letter = letter;
+        this.digital = digital;
+    }
+
     public LetterCoordinate getLetter() {
 
         return letter;

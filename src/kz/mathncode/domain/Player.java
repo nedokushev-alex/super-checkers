@@ -28,6 +28,11 @@ public class Player {
         return color;
     }
 
+    public String getName() {
+
+        return color == Color.WHITE ? "БЕЛЫЕ" : "ЧЁРНЫЕ";
+    }
+
     public List<Unit> initUnits() throws GameException {
 
         if (color == Color.WHITE) {
