@@ -26,7 +26,7 @@ public class Main {
                 Coordinates startCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[0]);
                 Coordinates finishCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[1]);
 
-                game.move(startCoordinates, finishCoordinates);
+                game.performAction(startCoordinates, finishCoordinates);
 
             } catch (GameException ex) {
                 System.out.println("ОШИБКА: " + ex.getMessage());

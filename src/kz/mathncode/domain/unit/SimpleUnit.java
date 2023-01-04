@@ -1,7 +1,9 @@
 package kz.mathncode.domain.unit;
 
+import kz.mathncode.domain.Action;
 import kz.mathncode.domain.Board;
 import kz.mathncode.domain.Coordinates;
+import kz.mathncode.domain.enums.ActionType;
 import kz.mathncode.domain.enums.Color;
 import kz.mathncode.exceptions.GameException;
 
@@ -17,32 +19,21 @@ public class SimpleUnit extends AbstractUnit {
     }
 
     @Override
-    public boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates) {
-
-        int diffLine = getDiffLine(startCoordinates, finishCoordinates);
-        int diffColumn = getDiffColumn(startCoordinates, finishCoordinates);
-
-        if (color == Color.WHITE) {
-            if (diffLine == 1 && Math.abs(diffColumn) == 1) {
-                return true;
-            }
-        } else {
-            if (diffLine == -1 && Math.abs(diffColumn) == 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean isCorrectChop(Coordinates startCoordinates, Coordinates finishCoordinates,
+    public Action determineAction(Coordinates startCoordinates, Coordinates finishCoordinates,
             Board board) throws GameException {
 
         int diffLine = getDiffLine(startCoordinates, finishCoordinates);
         int diffColumn = getDiffColumn(startCoordinates, finishCoordinates);
 
-        if (Math.abs(diffLine) == 2 && Math.abs(diffColumn) == 2) {
+        // проверка "перемещение ли это?"
+        if (Math.abs(diffLine) == 1 && Math.abs(diffColumn) == 1) {
+            if ((color == Color.WHITE && diffLine == 1)
+                    || (color == Color.BLACK && diffLine == -1)) {
+                return new Action(ActionType.MOVE, null);
+            }
+
+            // проверка "рубка ли это?"
+        } else if (Math.abs(diffLine) == 2 && Math.abs(diffColumn) == 2) {
 
             int victimLine = (startCoordinates.getDigital().getLineNumber() +
                     finishCoordinates.getDigital().getLineNumber()) / 2;
@@ -53,7 +44,32 @@ public class SimpleUnit extends AbstractUnit {
 
             Unit victim = board.getUnitByCoordinates(victimCoord);
             if (victim != null && victim.getColor() != color) {
-                return true;
+                return new Action(ActionType.CHOP, victim);
+            }
+        }
+
+        throw new GameException("Некорректный ход для пешки!");
+    }
+
+    @Override
+    public boolean hasPossibleVictim(Board board) {
+
+        int unitLine = coordinates.getDigital().getLineNumber();
+        int unitColumn = coordinates.getLetter().getColumnNumber();
+
+        int[] lines = {unitLine - 1, unitLine + 1};
+        int[] columns = {unitColumn - 1, unitColumn + 1};
+
+        for (int line : lines) {
+            for (int column : columns) {
+                Coordinates coordPossibleVictim = new Coordinates(column, line);
+                Unit possibleVictim = board.getUnitByCoordinates(coordPossibleVictim);
+                if (possibleVictim != null && possibleVictim.getColor() != color) {
+                    // todo проверить поле "за" possibleVictim - поле приземления юнита после выполнения рубки
+                    // - найти координаты поля приземления
+                    // - проверить пустое ли это поле приземления
+                    // если поле окажется пустым, то return true;
+                }
             }
         }
 

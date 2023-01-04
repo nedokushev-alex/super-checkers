@@ -1,5 +1,6 @@
 package kz.mathncode.domain.unit;
 
+import kz.mathncode.domain.Action;
 import kz.mathncode.domain.Board;
 import kz.mathncode.domain.Coordinates;
 import kz.mathncode.domain.enums.Color;
@@ -17,16 +18,9 @@ public class DameUnit extends AbstractUnit {
     }
 
     @Override
-    public boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates) {
-
-        // todo потом
-        return false;
-    }
-
-    @Override
-    public boolean isCorrectChop(Coordinates startCoordinates, Coordinates finishCoordinatesBoard,
+    public Action determineAction(Coordinates startCoordinates, Coordinates finishCoordinates,
             Board board) throws GameException {
 
-        return false;
+        return null;
     }
 }

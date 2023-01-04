@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kz.mathncode.domain.enums.ActionType;
 import kz.mathncode.domain.enums.Color;
 import kz.mathncode.domain.unit.Unit;
 import kz.mathncode.exceptions.GameException;
@@ -47,39 +48,49 @@ public class Game {
         return activePlayer;
     }
 
-    public void move(Coordinates startCoordinate, Coordinates finishCoordinate)
+    public void performAction(Coordinates startCoordinate, Coordinates finishCoordinate)
             throws GameException {
 
+        // достаём юнита активного игрока на стартовой позиции
         Unit activeUnit = getActiveUnit(startCoordinate);
-
-        if (!activeUnit.isCorrectMove(startCoordinate, finishCoordinate)) {
-            throw new GameException("Некорректный ход для данного юнита");
-        }
-
+        // проверка на пустоту конечное поля
         checkEmptyFinishField(finishCoordinate);
 
-        activeUnit.setCoordinate(finishCoordinate);
+        Action action =
+                activeUnit.determineAction(startCoordinate, finishCoordinate, board);
 
-        Color opponentColor = activePlayer.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
-        activePlayer = players.get(opponentColor);
+        if (action.getActionType() == ActionType.MOVE) {
+            move(activeUnit, finishCoordinate);
+        } else {
+            chop(activeUnit, action.getVictim(), finishCoordinate);
+        }
     }
 
-    public void chop(Coordinates startCoordinate, Coordinates finishCoordinate)
+    public void move(Unit activeUnit, Coordinates finishCoordinate)
             throws GameException {
 
-        Unit activeUnit = getActiveUnit(startCoordinate);
+        // todo проверить, что нет доступных ходов-рубок для ВСЕХ юнитов активного игрока
 
-        // todo соответствует ли поедание механике юнита
-        activeUnit.isCorrectChop(startCoordinate, finishCoordinate, board);
-
-        checkEmptyFinishField(finishCoordinate);
-
+        // непосредственно перемещение - изменение координаты юнита на finishCoordinate
         activeUnit.setCoordinate(finishCoordinate);
 
-        // todo удалить с доски юнита, которого съели
+        // выполняем переход хода - изменяется активный игрок (активным становится соперник)
+        changeActivePlayer();
+    }
 
-        // todo проверить есть ли ещё возможность рубить у активного юнита (если есть такая возможность,
-        //  то не передаём ход другому игроку, иначе - передаём ход другому игроку)
+    public void chop(Unit activeUnit, Unit victim, Coordinates finishCoordinate)
+            throws GameException {
+
+        // перемещение на конечную позицию (поле для приземления после рубки)
+        activeUnit.setCoordinate(finishCoordinate);
+
+        // удаляем жертву из списка юнитов на доске
+        board.getUnits().remove(victim);
+
+        // переход хода сопернику
+        // todo проверить есть ли ещё возможность рубить у АКТИВНОГО (одного) юнита
+        //  (если есть такая возможность, то не передаём ход другому игроку, иначе - передаём ход другому игроку)
+        changeActivePlayer();
     }
 
     private Unit getActiveUnit(Coordinates startCoordinate) throws GameException {
@@ -96,5 +107,11 @@ public class Game {
         if (board.getUnitByCoordinates(finishCoordinate) != null) {
             throw new GameException("На конечной позиции уже есть юнит");
         }
+    }
+
+    private void changeActivePlayer() {
+
+        Color opponentColor = activePlayer.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
+        activePlayer = players.get(opponentColor);
     }
 }

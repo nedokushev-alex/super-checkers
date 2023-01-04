@@ -1,7 +1,9 @@
 package kz.mathncode.domain.unit;
 
+import kz.mathncode.domain.Action;
 import kz.mathncode.domain.Board;
 import kz.mathncode.domain.Coordinates;
+import kz.mathncode.domain.enums.ActionType;
 import kz.mathncode.domain.enums.Color;
 import kz.mathncode.exceptions.GameException;
 
@@ -17,8 +19,8 @@ public interface Unit {
 
     Color getColor();
 
-    boolean isCorrectMove(Coordinates startCoordinates, Coordinates finishCoordinates);
-
-    boolean isCorrectChop(Coordinates startCoordinates, Coordinates finishCoordinatesBoard,
+    Action determineAction(Coordinates startCoordinates, Coordinates finishCoordinates,
             Board board) throws GameException;
+
+    boolean hasPossibleVictim(Board board);
 }
