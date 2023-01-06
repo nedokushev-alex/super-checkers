@@ -1,5 +1,7 @@
 package kz.mathncode.domain.enums;
 
+import kz.mathncode.exceptions.GameException;
+
 /**
  * @author Aleksandr Nedokushev
  * @created 14.12.2022
@@ -27,14 +29,13 @@ public enum LetterCoordinate {
         return columnNumber;
     }
 
-    public static LetterCoordinate getByColumnNumber(int column) {
+    public static LetterCoordinate getByColumnNumber(int column) throws GameException {
 
         for (LetterCoordinate value : values()) {
             if (value.columnNumber == column) {
                 return value;
             }
         }
-        // todo доделать нормально!
-        return null;
+        throw new GameException("Для данного номера колонки нет соответствующего значения");
     }
 }

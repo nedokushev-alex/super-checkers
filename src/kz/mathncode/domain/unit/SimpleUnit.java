@@ -62,13 +62,21 @@ public class SimpleUnit extends AbstractUnit {
 
         for (int line : lines) {
             for (int column : columns) {
-                Coordinates coordPossibleVictim = new Coordinates(column, line);
-                Unit possibleVictim = board.getUnitByCoordinates(coordPossibleVictim);
-                if (possibleVictim != null && possibleVictim.getColor() != color) {
-                    // todo проверить поле "за" possibleVictim - поле приземления юнита после выполнения рубки
-                    // - найти координаты поля приземления
-                    // - проверить пустое ли это поле приземления
-                    // если поле окажется пустым, то return true;
+                try {
+                    Coordinates coordPossibleVictim = new Coordinates(column, line);
+                    Unit possibleVictim = board.getUnitByCoordinates(coordPossibleVictim);
+                    if (possibleVictim != null && possibleVictim.getColor() != color) {
+                        int landingLine = unitLine + (line - unitLine) * 2;
+                        int landingColumn = unitColumn + (column - unitColumn) * 2;
+                        // column(жертвы) = 4, unitColumn = 5
+                        // landingColumn = 5 + (4-5) * 2
+                        Coordinates landingCoord = new Coordinates(landingColumn, landingLine);
+                        if (board.isEmptyField(landingCoord)) {
+                            return true;
+                        }
+                    }
+                } catch (Exception ex) {
+
                 }
             }
         }

@@ -23,4 +23,10 @@ public class DameUnit extends AbstractUnit {
 
         return null;
     }
+
+    @Override
+    public boolean hasPossibleVictim(Board board) {
+
+        return false;
+    }
 }

@@ -1,5 +1,6 @@
 package kz.mathncode.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ public class Game {
     private Player activePlayer;
 
     private Map<Color, Player> players = new HashMap<>();
+
+    private Coordinates checkPoint;
 
     public Game() throws GameException {
 
@@ -51,13 +54,14 @@ public class Game {
     public void performAction(Coordinates startCoordinate, Coordinates finishCoordinate)
             throws GameException {
 
+        validateCheckPoint(startCoordinate);
+
         // достаём юнита активного игрока на стартовой позиции
         Unit activeUnit = getActiveUnit(startCoordinate);
         // проверка на пустоту конечное поля
         checkEmptyFinishField(finishCoordinate);
 
-        Action action =
-                activeUnit.determineAction(startCoordinate, finishCoordinate, board);
+        Action action = activeUnit.determineAction(startCoordinate, finishCoordinate, board);
 
         if (action.getActionType() == ActionType.MOVE) {
             move(activeUnit, finishCoordinate);
@@ -66,10 +70,10 @@ public class Game {
         }
     }
 
-    public void move(Unit activeUnit, Coordinates finishCoordinate)
-            throws GameException {
+    public void move(Unit activeUnit, Coordinates finishCoordinate) throws GameException {
 
-        // todo проверить, что нет доступных ходов-рубок для ВСЕХ юнитов активного игрока
+        // проверяем, что у активного игрока нет доступных ходов-рубок для ВСЕХ его юнитов
+        checkCanActivePlayerOnlyMove();
 
         // непосредственно перемещение - изменение координаты юнита на finishCoordinate
         activeUnit.setCoordinate(finishCoordinate);
@@ -87,10 +91,15 @@ public class Game {
         // удаляем жертву из списка юнитов на доске
         board.getUnits().remove(victim);
 
-        // переход хода сопернику
-        // todo проверить есть ли ещё возможность рубить у АКТИВНОГО (одного) юнита
-        //  (если есть такая возможность, то не передаём ход другому игроку, иначе - передаём ход другому игроку)
-        changeActivePlayer();
+        // проверка и переход хода сопернику
+        if (activeUnit.hasPossibleVictim(board)) {
+            // переход хода не выполняем
+            checkPoint = finishCoordinate;
+        } else {
+            // выполняем переход хода другому игроку
+            checkPoint = null;
+            changeActivePlayer();
+        }
     }
 
     private Unit getActiveUnit(Coordinates startCoordinate) throws GameException {
@@ -113,5 +122,30 @@ public class Game {
 
         Color opponentColor = activePlayer.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
         activePlayer = players.get(opponentColor);
+    }
+
+    private void checkCanActivePlayerOnlyMove() throws GameException {
+
+        List<Unit> activePlayerUnits = new ArrayList<>();
+        for (Unit unit : board.getUnits()) {
+            if (unit.getColor() == activePlayer.getColor()) {
+                activePlayerUnits.add(unit);
+            }
+        }
+        for (Unit activePlayerUnit : activePlayerUnits) {
+            if (activePlayerUnit.hasPossibleVictim(board)) {
+                throw new GameException(
+                        "У активного игрока есть возможный ход-рубка, простое перемещение запрещено!");
+
+            }
+        }
+    }
+
+    private void validateCheckPoint(Coordinates startCoordinate) throws GameException {
+
+        if (checkPoint != null && !checkPoint.equals(startCoordinate)) {
+            throw new GameException(
+                    "Игрок должен продолжать ход-рубку тем же самым юнитом, которым он уже выполнил ход-рубку!");
+        }
     }
 }

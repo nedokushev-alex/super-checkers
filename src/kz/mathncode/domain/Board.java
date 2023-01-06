@@ -68,4 +68,14 @@ public class Board {
 
         return null;
     }
+
+    public boolean isEmptyField(Coordinates coordinates) {
+
+        Unit unitOnField = getUnitByCoordinates(coordinates);
+        if (unitOnField == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
