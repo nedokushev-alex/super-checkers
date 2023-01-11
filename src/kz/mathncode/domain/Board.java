@@ -6,6 +6,8 @@ import java.util.List;
 import kz.mathncode.domain.enums.Color;
 import kz.mathncode.domain.enums.DigitalCoordinate;
 import kz.mathncode.domain.enums.LetterCoordinate;
+import kz.mathncode.domain.unit.DameUnit;
+import kz.mathncode.domain.unit.SimpleUnit;
 import kz.mathncode.domain.unit.Unit;
 import kz.mathncode.exceptions.GameException;
 
@@ -39,7 +41,7 @@ public class Board {
                     if (unit == null) {
                         builder.append("_");
                     } else {
-                        String unitView = unit.getColor() == Color.WHITE ? "w" : "b";
+                        String unitView = unit.getView();
                         builder.append(unitView);
                     }
                 } else {
@@ -76,6 +78,35 @@ public class Board {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public Unit relocateUnit(Unit unit, Coordinates coordinates) {
+
+        if (unit instanceof SimpleUnit simpleUnit) {
+            // это была пешка
+            if ((simpleUnit.getColor() == Color.WHITE
+                            && coordinates.getDigital() == DigitalCoordinate.EIGHT)
+                || (simpleUnit.getColor() == Color.BLACK
+                            && coordinates.getDigital() == DigitalCoordinate.ONE)) {
+
+                // превращение в дамку
+                units.remove(simpleUnit);
+
+                DameUnit dameUnit = new DameUnit(simpleUnit.getColor(), coordinates);
+                units.add(dameUnit);
+
+                return dameUnit;
+
+            } else {
+                simpleUnit.setCoordinate(coordinates);
+                return unit;
+            }
+
+        } else {
+            // это была дамка
+            unit.setCoordinate(coordinates);
+            return unit;
         }
     }
 }

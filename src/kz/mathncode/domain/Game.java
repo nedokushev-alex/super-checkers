@@ -76,7 +76,7 @@ public class Game {
         checkCanActivePlayerOnlyMove();
 
         // непосредственно перемещение - изменение координаты юнита на finishCoordinate
-        activeUnit.setCoordinate(finishCoordinate);
+        board.relocateUnit(activeUnit, finishCoordinate);
 
         // выполняем переход хода - изменяется активный игрок (активным становится соперник)
         changeActivePlayer();
@@ -86,7 +86,7 @@ public class Game {
             throws GameException {
 
         // перемещение на конечную позицию (поле для приземления после рубки)
-        activeUnit.setCoordinate(finishCoordinate);
+        activeUnit = board.relocateUnit(activeUnit, finishCoordinate);
 
         // удаляем жертву из списка юнитов на доске
         board.getUnits().remove(victim);

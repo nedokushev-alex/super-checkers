@@ -19,6 +19,12 @@ public class SimpleUnit extends AbstractUnit {
     }
 
     @Override
+    public String getView() {
+
+        return color == Color.WHITE ? "w" : "b";
+    }
+
+    @Override
     public Action determineAction(Coordinates startCoordinates, Coordinates finishCoordinates,
             Board board) throws GameException {
 
@@ -82,19 +88,5 @@ public class SimpleUnit extends AbstractUnit {
         }
 
         return false;
-    }
-
-    private static int getDiffLine(Coordinates startCoordinates, Coordinates finishCoordinates) {
-
-        int startLine = startCoordinates.getDigital().getLineNumber();
-        int finishLine = finishCoordinates.getDigital().getLineNumber();
-        return finishLine - startLine;
-    }
-
-    private static int getDiffColumn(Coordinates startCoordinates, Coordinates finishCoordinates) {
-
-        int startColumn = startCoordinates.getLetter().getColumnNumber();
-        int finishColumn = finishCoordinates.getLetter().getColumnNumber();
-        return finishColumn - startColumn;
     }
 }

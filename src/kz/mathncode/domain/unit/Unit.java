@@ -19,6 +19,8 @@ public interface Unit {
 
     Color getColor();
 
+    String getView();
+
     Action determineAction(Coordinates startCoordinates, Coordinates finishCoordinates,
             Board board) throws GameException;
 
