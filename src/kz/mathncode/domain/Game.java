@@ -7,6 +7,7 @@ import java.util.Map;
 
 import kz.mathncode.domain.enums.ActionType;
 import kz.mathncode.domain.enums.Color;
+import kz.mathncode.domain.enums.ResultAction;
 import kz.mathncode.domain.unit.Unit;
 import kz.mathncode.exceptions.GameException;
 
@@ -51,7 +52,7 @@ public class Game {
         return activePlayer;
     }
 
-    public void performAction(Coordinates startCoordinate, Coordinates finishCoordinate)
+    public ResultAction performAction(Coordinates startCoordinate, Coordinates finishCoordinate)
             throws GameException {
 
         validateCheckPoint(startCoordinate);
@@ -64,13 +65,13 @@ public class Game {
         Action action = activeUnit.determineAction(startCoordinate, finishCoordinate, board);
 
         if (action.getActionType() == ActionType.MOVE) {
-            move(activeUnit, finishCoordinate);
+            return move(activeUnit, finishCoordinate);
         } else {
-            chop(activeUnit, action.getVictim(), finishCoordinate);
+            return chop(activeUnit, action.getVictim(), finishCoordinate);
         }
     }
 
-    public void move(Unit activeUnit, Coordinates finishCoordinate) throws GameException {
+    public ResultAction move(Unit activeUnit, Coordinates finishCoordinate) throws GameException {
 
         // проверяем, что у активного игрока нет доступных ходов-рубок для ВСЕХ его юнитов
         checkCanActivePlayerOnlyMove();
@@ -80,9 +81,11 @@ public class Game {
 
         // выполняем переход хода - изменяется активный игрок (активным становится соперник)
         changeActivePlayer();
+
+        return ResultAction.CONTINUE;
     }
 
-    public void chop(Unit activeUnit, Unit victim, Coordinates finishCoordinate)
+    public ResultAction chop(Unit activeUnit, Unit victim, Coordinates finishCoordinate)
             throws GameException {
 
         // перемещение на конечную позицию (поле для приземления после рубки)
@@ -90,6 +93,10 @@ public class Game {
 
         // удаляем жертву из списка юнитов на доске
         board.getUnits().remove(victim);
+        // todo проверить, что на доске не осталось ни одного юнита соперника -> ResultAction.WIN
+        if (isDestroyedAllOpponentUnits()) {
+            return ResultAction.WIN;
+        }
 
         // проверка и переход хода сопернику
         if (activeUnit.hasPossibleVictim(board)) {
@@ -100,6 +107,8 @@ public class Game {
             checkPoint = null;
             changeActivePlayer();
         }
+
+        return ResultAction.CONTINUE;
     }
 
     private Unit getActiveUnit(Coordinates startCoordinate) throws GameException {
@@ -147,5 +156,14 @@ public class Game {
             throw new GameException(
                     "Игрок должен продолжать ход-рубку тем же самым юнитом, которым он уже выполнил ход-рубку!");
         }
+    }
+
+    private boolean isDestroyedAllOpponentUnits() {
+
+        for (Unit unit : board.getUnits()) {
+            // todo проверить, что не осталось ни одного юнита соперника
+        }
+
+        return false;
     }
 }

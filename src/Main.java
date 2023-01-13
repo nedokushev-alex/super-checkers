@@ -3,6 +3,7 @@ import java.util.Scanner;
 import kz.mathncode.domain.Coordinates;
 import kz.mathncode.domain.Game;
 import kz.mathncode.domain.enums.Color;
+import kz.mathncode.domain.enums.ResultAction;
 import kz.mathncode.exceptions.GameException;
 
 /**
@@ -16,6 +17,7 @@ public class Main {
         Game game = new Game();
         Scanner in = new Scanner(System.in);
 
+        ResultAction resultAction = ResultAction.CONTINUE;
         do {
             System.out.println(game.getBoard().show());
             System.out.println("Ходят " + game.getActivePlayer().getName());
@@ -26,12 +28,15 @@ public class Main {
                 Coordinates startCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[0]);
                 Coordinates finishCoordinates = Coordinates.convertFromHumanInput(humanCoordinates[1]);
 
-                game.performAction(startCoordinates, finishCoordinates);
+                resultAction = game.performAction(startCoordinates, finishCoordinates);
 
             } catch (GameException ex) {
                 System.out.println("ОШИБКА: " + ex.getMessage());
             }
-        } while (true);
+        } while (resultAction == ResultAction.CONTINUE);
+
+        System.out.println(game.getBoard().show());
+        System.out.println("ПОБЕДИЛИ " + game.getActivePlayer().getName() + "!");
     }
 
     private static String[] receiveHumanCoordinates(Scanner in) throws GameException {
