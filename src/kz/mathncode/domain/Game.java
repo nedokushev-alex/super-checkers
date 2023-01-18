@@ -79,10 +79,13 @@ public class Game {
         // непосредственно перемещение - изменение координаты юнита на finishCoordinate
         board.relocateUnit(activeUnit, finishCoordinate);
 
-        // выполняем переход хода - изменяется активный игрок (активным становится соперник)
-        changeActivePlayer();
-
-        return ResultAction.CONTINUE;
+        if (isBlockedAllOpponentUnits()) {
+            return ResultAction.WIN;
+        } else {
+            // выполняем переход хода - изменяется активный игрок (активным становится соперник)
+            changeActivePlayer();
+            return ResultAction.CONTINUE;
+        }
     }
 
     public ResultAction chop(Unit activeUnit, Unit victim, Coordinates finishCoordinate)
@@ -93,8 +96,7 @@ public class Game {
 
         // удаляем жертву из списка юнитов на доске
         board.getUnits().remove(victim);
-        // todo проверить, что на доске не осталось ни одного юнита соперника -> ResultAction.WIN
-        if (isDestroyedAllOpponentUnits()) {
+        if (isDestroyedAllOpponentUnits() || isBlockedAllOpponentUnits()) {
             return ResultAction.WIN;
         }
 
@@ -161,9 +163,23 @@ public class Game {
     private boolean isDestroyedAllOpponentUnits() {
 
         for (Unit unit : board.getUnits()) {
-            // todo проверить, что не осталось ни одного юнита соперника
+            if (unit.getColor() != activePlayer.getColor()) {
+                return false;
+            }
         }
+        return true;
+    }
 
-        return false;
+    private boolean isBlockedAllOpponentUnits() {
+
+        for (Unit unit : board.getUnits()) {
+            if (unit.getColor() != activePlayer.getColor()) {
+                // может ли юнит соперника выполнить перемещение или срубить
+                if (unit.hasPossibleMove(board) || unit.hasPossibleVictim(board)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

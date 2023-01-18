@@ -25,4 +25,6 @@ public interface Unit {
             Board board) throws GameException;
 
     boolean hasPossibleVictim(Board board);
+
+    boolean hasPossibleMove(Board board);
 }

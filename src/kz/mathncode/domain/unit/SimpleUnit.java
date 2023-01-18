@@ -89,4 +89,27 @@ public class SimpleUnit extends AbstractUnit {
 
         return false;
     }
+
+    @Override
+    public boolean hasPossibleMove(Board board) {
+
+        int unitLine = coordinates.getDigital().getLineNumber();
+        int unitColumn = coordinates.getLetter().getColumnNumber();
+
+        int line = color == Color.WHITE ? unitLine + 1 : unitLine - 1;
+        int[] columns = {unitColumn - 1, unitColumn + 1};
+
+        for (int column : columns) {
+            try {
+                Coordinates coord = new Coordinates(column, line);
+                if (board.isEmptyField(coord)) {
+                    return true;
+                }
+            } catch (GameException e) {
+                // поля не существует, сходить туда не можем
+            }
+        }
+
+        return false;
+    }
 }

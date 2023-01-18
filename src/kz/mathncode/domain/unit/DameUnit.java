@@ -92,7 +92,7 @@ public class DameUnit extends AbstractUnit {
 
                 // если мы натолкнулись на юнит И он цвета соперника
                 if (foundUnit != null && foundUnit.getColor() != color) {
-                    // todo надо проверить поле ЗА этим юнитом: если поле пустое - то рубка возможна,\
+                    // надо проверить поле ЗА этим юнитом: если поле пустое - то рубка возможна,\
                     // а если поле непустое - то рубка НЕвозможна
                     try {
                         int landingLine = line + appenderLine; //5-1=4
@@ -104,6 +104,31 @@ public class DameUnit extends AbstractUnit {
                     } catch (GameException ex) {
 
                     }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hasPossibleMove(Board board) {
+
+        int unitLine = coordinates.getDigital().getLineNumber();
+        int unitColumn = coordinates.getLetter().getColumnNumber();
+
+        int[] lines = { unitLine - 1, unitLine + 1 };
+        int[] columns = {unitColumn - 1, unitColumn + 1};
+
+        for (int line : lines) {
+            for (int column : columns) {
+                try {
+                    Coordinates coord = new Coordinates(column, line);
+                    if (board.isEmptyField(coord)) {
+                        return true;
+                    }
+                } catch (GameException e) {
+                    // поля не существует, сходить туда не можем
                 }
             }
         }
@@ -127,15 +152,17 @@ public class DameUnit extends AbstractUnit {
         List<Unit> unitsOnTrack = new ArrayList<>();
         int line = startLine; // 8
         int column = startColumn; // 5
-        do {
-            line = line + appenderLine; // 7 // 6 // 5
-            column = column + appenderColumn; // 4 // 3 // 2
+
+        while (line + appenderLine != finishLine) { // finishLine
+
+            line = line + appenderLine; // 7
+            column = column + appenderColumn; // 4
             Coordinates coord = new Coordinates(column, line);
             Unit unit = board.getUnitByCoordinates(coord);
             if (unit != null) {
                 unitsOnTrack.add(unit);
             }
-        } while (line + appenderLine != finishLine); // line + appenderLine = 4; finishLine = 4
+        }
 
         return unitsOnTrack;
     }
